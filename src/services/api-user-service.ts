@@ -3,7 +3,7 @@ import axios from "axios"
 const instance = axios.create({
     baseURL: "https://localhost:5001/api/User",
     headers: {
-        "Content-Type" : "application/json"
+        "Content-Type": "application/json"
     }
 })
 
@@ -19,15 +19,38 @@ const User = {
     login: (user: any) => requests.post(`/Login`, user)
 }
 
-export async function login(user: any){
+export async function login(user: any) {
     const data = await User.login(user)
-    .then((response) => {
-        return {
-            response
-        }
-    })
-    .catch((error) => {
-        return error.response
-    } )
+        .then((response) => {
+            return {
+                response
+            }
+        })
+        .catch((error) => {
+            return error.response
+        })
     return data
+}
+
+export function setAccessToken(token: string) {
+    window.localStorage.setItem("accessToken", token)
+}
+
+export function setRefreshToken(refreshToken: string) {
+    window.localStorage.setItem("refreshToken", refreshToken)
+}
+
+export function getAccessToken(): null | string {
+    const token = window.localStorage.getItem("accessToken")
+    return token;
+}
+
+export function getRehreshToken(): null | string {
+    const token = window.localStorage.getItem("refreshToken")
+    return token;
+}
+
+export function removeTokens() {
+    window.localStorage.removeItem("accessToken")
+    window.localStorage.removeItem("refreshToken")
 }
