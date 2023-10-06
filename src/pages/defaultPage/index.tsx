@@ -1,5 +1,7 @@
+import UserInformation from "../../components/userInformation";
+
 const DefaultPage = () => {
-    return <>Dafault page</>;
+    return <UserInformation />;
   };
   
   export default DefaultPage;

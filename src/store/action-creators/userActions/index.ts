@@ -4,7 +4,7 @@ import { toast } from "react-toastify"
 import jwtDecode from "jwt-decode"
 
 // Import services
-import { login, logout, removeTokens, setAccessToken, setRefreshToken } from "../../../services/api-user-service";
+import { login, logout, removeTokens, setAccessToken, setRefreshToken, GetAll } from "../../../services/api-user-service";
 
 export const LoginUser = (user : any) => {
     return async(dispatch: Dispatch<UserActions>) => {
@@ -48,3 +48,16 @@ export const AuthUser = (token: string, message: string, dispatch: Dispatch<User
    const decodedToken = jwtDecode(token) as any;
    dispatch({type: UserActionTypes.LOGIN_USER_SUCCESS, payload: {message, decodedToken}})
 } 
+
+export const GetAllUsers = () => {
+   return async (dispatch: Dispatch<UserActions>) => {
+       const data = await GetAll();
+       const {response} = data;
+       console.log("response" + response);
+       if (response.success) {
+           dispatch({
+               type: UserActionTypes.GETALLUSERS_REQUEST, payload: { allUsers: response.payload, message: response.message }
+           });
+       }
+   }
+};

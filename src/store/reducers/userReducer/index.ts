@@ -1,3 +1,4 @@
+import { act } from "@testing-library/react";
 import { UserState, UserActions, UserActionTypes } from "./types";
 
 const initialState: UserState = {
@@ -38,6 +39,8 @@ const initialState: UserState = {
           selectedUser: null,
           allUsers: [],
         };
+      case UserActionTypes.GETALLUSERS_REQUEST:
+        return {...state, loading: false, allUsers: action.payload.allUsers, message: action.payload.message};
       default:
         return state;
     }
