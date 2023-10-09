@@ -3,20 +3,67 @@ import { useEffect } from "react";
 import { useActions } from "../../../hooks/useActions";
 
 
+
+import {
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from "@mui/material";
+
+interface UserData {
+  id: string,
+  firstName: string,
+  lastName : string,
+  email: string,
+  emailConfirmed: boolean,
+  lockedOut: string,
+  role: string
+}
+
+
 const AllUsers = () => {
-  const { allUsers } = useTypedSelector((store) => store.UserReducer);
+
   const { GetAllUsers } = useActions();
 
   useEffect(() => {
-    var users = GetAllUsers();
-    console.log(users);
+    GetAllUsers();
   }, []);
 
+  const { allUsers } = useTypedSelector((store) => store.UserReducer);
+
+
+
   return (
-    <>
-      <h1>All users</h1>
-    </>
-      
+    <TableContainer component={Paper}>
+       <Table sx={{ minWidth: 650 }} aria-label="simple table">
+    <TableHead>
+      <TableRow>
+        <TableCell align="left">Name</TableCell>
+        <TableCell align="left">Surname</TableCell>
+        <TableCell align="left">Email</TableCell>
+        <TableCell align="left">lockedOut</TableCell>
+        <TableCell align="left">Confirm email</TableCell>
+        <TableCell align="left">Role</TableCell>
+      </TableRow>
+    </TableHead>
+    <TableBody>
+      {allUsers.map((user: UserData) => (
+        <TableRow key={user.email}>
+          <TableCell align="left">{user.firstName}</TableCell>
+          <TableCell align="left">{user.lastName}</TableCell>
+          <TableCell align="left">{user.email}</TableCell>
+          <TableCell align="left">{user.lockedOut}</TableCell>
+          <TableCell align="left">{user.emailConfirmed  ? "True" : "False"}</TableCell>
+          <TableCell align="left">{user.role}</TableCell>
+        </TableRow>
+      ))}
+    </TableBody>
+  </Table>
+      </TableContainer>
   );
 };
 

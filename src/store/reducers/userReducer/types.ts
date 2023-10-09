@@ -45,9 +45,9 @@ interface ServerErrorAction{
     payload: any
 }
 
-interface GetAllUsers{
+interface UserListAction{
     type: UserActionTypes.GETALLUSERS_REQUEST,
     payload: any
 }
 
-export type UserActions = | LogoutUserAction |  StartRequestAction | FinishRequestAction | LoginUserSuccessAction | LoginUserErrorAction | ServerErrorAction | GetAllUsers
+export type UserActions = UserListAction | LogoutUserAction | StartRequestAction | FinishRequestAction | LoginUserSuccessAction | LoginUserErrorAction | ServerErrorAction

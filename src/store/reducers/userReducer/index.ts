@@ -39,8 +39,9 @@ const initialState: UserState = {
           selectedUser: null,
           allUsers: [],
         };
-      case UserActionTypes.GETALLUSERS_REQUEST:
-        return {...state, loading: false, allUsers: action.payload.allUsers, message: action.payload.message};
+        case UserActionTypes.GETALLUSERS_REQUEST:
+          return{...state, loading: false, message: action.payload.message, allUsers: action.payload.allUser,
+          }
       default:
         return state;
     }

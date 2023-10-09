@@ -51,13 +51,13 @@ export const AuthUser = (token: string, message: string, dispatch: Dispatch<User
 
 export const GetAllUsers = () => {
    return async (dispatch: Dispatch<UserActions>) => {
-       const data = await GetAll();
-       const {response} = data;
-       console.log("response" + response);
-       if (response.success) {
-           dispatch({
-               type: UserActionTypes.GETALLUSERS_REQUEST, payload: { allUsers: response.payload, message: response.message }
-           });
-       }
-   }
-};
+      const { response } = await GetAll();
+      const data = response;
+      console.log( "Get" +  response) 
+     if (response.success) {
+       dispatch({
+         type: UserActionTypes.GETALLUSERS_REQUEST, payload: {allUser: response.payload, message:response.message}
+       });
+     }
+     }
+   };

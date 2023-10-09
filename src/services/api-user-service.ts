@@ -75,7 +75,7 @@ const requests = {
 }
 
 const User = {
-    login: (user: any) => requests.post(`/login`, user),
+    login: (user: any) => requests.post(`/Login`, user),
     logout: (userId: string) => requests.get(`/logout?userId=` + userId),
     GetAll: () => requests.get(`/GetAll`)
 }
@@ -106,17 +106,17 @@ export async function logout(userId: string){
     return data
 }
 
-export async function GetAll() {
-    const users = await User.GetAll()
-    .then((response) => {
+export async function GetAll (){
+  const data = await User.GetAll()
+  .then((response) => {
       return {
           response
       }
-    })
-    .catch((error) => {
+  })
+  .catch((error) => {
       return error.response
   } )
-  return users;
+  return data
 }
 
 
