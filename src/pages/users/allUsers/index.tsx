@@ -1,69 +1,115 @@
-import { useTypedSelector } from "../../../hooks/useTypedSelector";
-import { useEffect } from "react";
-import { useActions } from "../../../hooks/useActions";
-
-
-
+import React, { useEffect, useState } from "react";
 import {
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-} from "@mui/material";
+  DataGrid,
+  GridApi,
+  GridColDef,
+  GridEditCellValueParams,
+} from "@mui/x-data-grid";
+import Loader from "../../../components/loader";
+import { useActions } from "../../../hooks/useActions";
+import { useTypedSelector } from "../../../hooks/useTypedSelector";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import { Link, Navigate } from "react-router-dom";
+import { styled } from "@mui/material/styles";
+import { Grid, TablePagination } from "@mui/material";
+import Paper from "@mui/material/Paper";
+const Item = styled(Paper)(({ theme }) => ({
+  ...theme.typography.body2,
+  textAlign: "right",
+  color: theme.palette.text.secondary,
+  height: "700px",
+}));
 
-interface UserData {
-  id: string,
-  firstName: string,
-  lastName : string,
-  email: string,
-  emailConfirmed: boolean,
-  lockedOut: string,
-  role: string
-}
-
-
-const AllUsers = () => {
-
+const AllUsers: React.FC<any> = () => {
   const { GetAllUsers } = useActions();
+  const { loading, allUsers } = useTypedSelector((state) => state.UserReducer);
+
+  let rows: any[] = allUsers;
+  const [isRedirect, setIsRedirect] = useState(false);
 
   useEffect(() => {
     GetAllUsers();
   }, []);
 
-  const { allUsers } = useTypedSelector((store) => store.UserReducer);
+  const columns: GridColDef[] = [
+    { field: "firstName", headerName: "First Name", width: 180 },
+    { field: "lastName", headerName: "Last Name", width: 170 },
+    { field: "email", headerName: "Email", width: 200 },
+    { field: "phoneNumber", headerName: "Phone", width: 150 },
+    { field: "emailConfirmed", headerName: "Confirmed email", width: 130 },
+    {
+      field: "lockoutEnd",
+      headerName: "Lockout End",
+      width: 250,
+    },
+    { field: "role", headerName: "Role", width: 130 },
+    {
+      field: "id",
+      headerName: "Action",
+      sortable: false,
+      renderCell: (params: any) => {
+        const onClick = (e: any) => {
+          e.stopPropagation(); // don't select this row after clicking
 
+          const api: GridApi = params.api;
+          const thisRow: Record<string, GridEditCellValueParams> = {};
 
+          api
+            .getAllColumns()
+            .filter((c: any) => c.field !== "__check__" && !!c)
+            .forEach(
+              (c: any) =>
+                (thisRow[c.field] = params.getValue(params.id, c.field))
+            );
+          const userData = thisRow;
+          setIsRedirect(true);
+        };
+
+        return <Button onClick={onClick}>Edit</Button>;
+      },
+    },
+  ];
+
+  if (loading) {
+    return <Loader />;
+  }
+
+  if (isRedirect) {
+    return <Navigate to="/dashboard/userDetails" />;
+  }
 
   return (
-    <TableContainer component={Paper}>
-       <Table sx={{ minWidth: 650 }} aria-label="simple table">
-    <TableHead>
-      <TableRow>
-        <TableCell align="left">Name</TableCell>
-        <TableCell align="left">Surname</TableCell>
-        <TableCell align="left">Email</TableCell>
-        <TableCell align="left">lockedOut</TableCell>
-        <TableCell align="left">Confirm email</TableCell>
-        <TableCell align="left">Role</TableCell>
-      </TableRow>
-    </TableHead>
-    <TableBody>
-      {allUsers.map((user: UserData) => (
-        <TableRow key={user.email}>
-          <TableCell align="left">{user.firstName}</TableCell>
-          <TableCell align="left">{user.lastName}</TableCell>
-          <TableCell align="left">{user.email}</TableCell>
-          <TableCell align="left">{user.lockedOut}</TableCell>
-          <TableCell align="left">{user.emailConfirmed  ? "True" : "False"}</TableCell>
-          <TableCell align="left">{user.role}</TableCell>
-        </TableRow>
-      ))}
-    </TableBody>
-  </Table>
-      </TableContainer>
+    <Box sx={{ display: "flex", width: "100%" }}>
+      <Grid container spacing={2}>
+        <Grid item xs={12} sx={{ mb: 2, textAlign: "right" }}>
+          <Button variant="contained">
+            <Link
+              style={{ textDecoration: "none", color: "#fff" }}
+              to="/dashboard/Register"
+            >
+              Add new user
+            </Link>
+          </Button>
+        </Grid>
+        <Grid item xs={12}>
+          <Item>
+            <DataGrid
+              initialState={{
+                sorting: {
+                  sortModel: [{ field: "lastName", sort: "asc" }],
+                },
+              }}
+              rows={rows}
+              columns={columns}
+              checkboxSelection
+              hideFooterPagination={true}
+              hideFooter={true}
+            />
+          </Item>
+        </Grid>
+      </Grid>
+    </Box>
   );
 };
 

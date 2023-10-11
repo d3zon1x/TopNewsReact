@@ -4,7 +4,7 @@ import { toast } from "react-toastify"
 import jwtDecode from "jwt-decode"
 
 // Import services
-import { login, logout, removeTokens, setAccessToken, setRefreshToken, GetAll } from "../../../services/api-user-service";
+import { login, logout, removeTokens, setAccessToken, setRefreshToken, GetAll, register } from "../../../services/api-user-service";
 
 export const LoginUser = (user : any) => {
     return async(dispatch: Dispatch<UserActions>) => {
@@ -49,6 +49,7 @@ export const AuthUser = (token: string, message: string, dispatch: Dispatch<User
    dispatch({type: UserActionTypes.LOGIN_USER_SUCCESS, payload: {message, decodedToken}})
 } 
 
+
 export const GetAllUsers = () => {
    return async (dispatch: Dispatch<UserActions>) => {
       const { response } = await GetAll();
@@ -61,3 +62,28 @@ export const GetAllUsers = () => {
      }
      }
    };
+
+   export const RegisterUser = (user: any) => {
+      return async (dispatch: Dispatch<UserActions>) => {
+        try {
+          dispatch({ type: UserActionTypes.START_REQUEST });
+          const data = await register(user);
+          const { response } = data;
+          if (!response.isSuccess) {
+            toast.error(response.message);
+          } else {
+            toast.success(response.message);
+            dispatch({
+              type: UserActionTypes.REGISTER_USER_SUCCESS,
+              payload: response.message,
+            });
+          }
+        } catch (e) {
+          dispatch({
+            type: UserActionTypes.SERVER_ERROR,
+            payload: "Unknown error",
+          });
+        }
+      };
+    };
+   
