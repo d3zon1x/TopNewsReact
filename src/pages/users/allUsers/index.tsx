@@ -23,6 +23,7 @@ const Item = styled(Paper)(({ theme }) => ({
 
 const AllUsers: React.FC<any> = () => {
   const { GetAllUsers } = useActions();
+  const { DeleteUser } = useActions();
   const { loading, allUsers } = useTypedSelector((state) => state.UserReducer);
 
   let rows: any[] = allUsers;
@@ -69,6 +70,39 @@ const AllUsers: React.FC<any> = () => {
         return <Button onClick={onClick}>Edit</Button>;
       },
     },
+    {
+      field: "id",
+      headerName: "Action",
+      sortable: false,
+      renderCell: (params: any) => {
+        const onClick = (e: any) => {
+          e.stopPropagation(); // don't select this row after clicking
+    
+          const api: GridApi = params.api;
+    
+          // Assuming you have a function to handle the deletion, replace 'handleDelete' with your actual deletion logic
+          const handleDelete = () => {
+            const thisRow: Record<string, GridEditCellValueParams> = {};
+    
+            api
+              .getAllColumns()
+              .filter((c: any) => c.field !== "__check__" && !!c)
+              .forEach(
+                (c: any) =>
+                  (thisRow[c.field] = params.getValue(params.id, c.field))
+              );
+    
+            const userId = params.getValue(params.Id, "Id");
+    
+            // Call your delete function with the userData
+            // replace 'deleteFunction' with your actual delete function
+            DeleteUser(userId);
+          };
+    
+          return <Button onClick={handleDelete}>Delete</Button>;
+        },
+      }
+    }
   ];
 
   if (loading) {

@@ -16,12 +16,13 @@ export enum UserActionTypes {
     SERVER_ERROR = "SERVER_ERROR",
     LOGOUT_USER = "LOGOUT_USER",
     GETALLUSERS_REQUEST = "GETALLUSERS_REQUEST",
-    REGISTER_USER_SUCCESS = "REGISTER_USER_SUCCESS"
+    REGISTER_USER_SUCCESS = "REGISTER_USER_SUCCESS",
+    DELETE_USER = "DELETE_USER"
 }
 
 interface RegisterUserSuccessAction {
     type: UserActionTypes.REGISTER_USER_SUCCESS;
-    payload: string;
+    payload: any;
 }
 
 interface StartRequestAction {
@@ -56,4 +57,9 @@ interface UserListAction{
     payload: any
 }
 
-export type UserActions = UserListAction | RegisterUserSuccessAction | LogoutUserAction | StartRequestAction | FinishRequestAction | LoginUserSuccessAction | LoginUserErrorAction | ServerErrorAction
+interface DeleteUser{
+    type: UserActionTypes.DELETE_USER,
+    payload: any
+}
+
+export type UserActions = DeleteUser | UserListAction | RegisterUserSuccessAction | LogoutUserAction | StartRequestAction | FinishRequestAction | LoginUserSuccessAction | LoginUserErrorAction | ServerErrorAction

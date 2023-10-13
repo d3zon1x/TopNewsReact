@@ -16,14 +16,14 @@ import {
 import { RegisterSchema } from "../validation";
 import { useActions } from "../../../hooks/useActions";
 import { useTypedSelector } from "../../../hooks/useTypedSelector";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const Register: React.FC = () => {
   const [role, setRole] = useState("Users");
   const { RegisterUser } = useActions();
   const { message } = useTypedSelector((store) => store.UserReducer);
 
-  if (message === "User successfully created.") {
+  if (message === "New user succesfully added.") {
     return <Navigate to="/dashboard/users" />;
   }
 

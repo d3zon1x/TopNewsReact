@@ -30,7 +30,7 @@ const initialState: UserState = {
       case UserActionTypes.SERVER_ERROR:
         return { ...state, loading: false };
       case UserActionTypes.REGISTER_USER_SUCCESS:
-        return { ...state, loading: false, message: action.payload };
+        return { ...state, loading: false, message: action.payload.message };
       case UserActionTypes.LOGOUT_USER:
         return {
           user: {},

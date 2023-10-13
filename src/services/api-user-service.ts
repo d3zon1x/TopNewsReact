@@ -79,6 +79,7 @@ const User = {
     logout: (userId: string) => requests.get(`/logout?userId=` + userId),
     GetAll: () => requests.get(`/GetAll`),
     register: (user: any) => requests.post(`/AddUser`, user),
+    Delete: (id: string) => requests.post(`/DeleteUser`, id)
 }
 
 export async function login(user: any) {
@@ -121,6 +122,18 @@ export async function GetAll (){
 }
 export async function register(user: any) {
   const data = await User.register(user)
+    .then((response) => {
+      return {
+        response,
+      };
+    })
+    .catch((error) => {
+      return error.response;
+    });
+  return data;
+}
+export async function Delete(id: string) {
+  const data = await User.Delete(id)
     .then((response) => {
       return {
         response,
