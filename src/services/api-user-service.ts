@@ -79,7 +79,9 @@ const User = {
     logout: (userId: string) => requests.get(`/logout?userId=` + userId),
     GetAll: () => requests.get(`/GetAll`),
     register: (user: any) => requests.post(`/AddUser`, user),
-    Delete: (id: string) => requests.post(`/DeleteUser`, id)
+    Delete: (id: string) => requests.post(`/DeleteUser`, id),
+    EditUser: (id: string) => requests.post(`/EditUser`, id),
+    GetById: (userId: string) => requests.get("/getbyid?userId=" + userId)
 }
 
 export async function login(user: any) {
@@ -144,6 +146,32 @@ export async function Delete(id: string) {
     });
   return data;
 }
+export async function Edituser(user: any) {
+  const data = await User.EditUser(user)
+      .then((response) => {
+          return {
+              response
+          }
+      })
+      .catch((error) => {
+          return error.response
+      })
+  return data
+}
+
+export async function GetbyId(userId: string) {
+  const data = await User.GetById(userId)
+      .then((response) => {
+          return {
+              response
+          }
+      })
+      .catch((error) => {
+          return error.response
+      })
+  return data
+}
+
 
 
 function refreshAccessToken() {

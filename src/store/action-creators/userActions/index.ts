@@ -4,7 +4,7 @@ import { toast } from "react-toastify"
 import jwtDecode from "jwt-decode"
 
 // Import services
-import { login, logout, removeTokens, setAccessToken, setRefreshToken, GetAll, register, Delete } from "../../../services/api-user-service";
+import { login, logout, removeTokens, setAccessToken, setRefreshToken, GetAll, register, Delete, Edituser, GetbyId } from "../../../services/api-user-service";
 
 export const LoginUser = (user : any) => {
     return async(dispatch: Dispatch<UserActions>) => {
@@ -113,4 +113,20 @@ export const GetAllUsers = () => {
         }
       };
     }
-   
+    export const EditUser = (user:any) => {
+      return async (dispatch: Dispatch<UserActions>) => {
+          await Edituser(user);
+      }
+  }
+  
+  export const GetUserById = (userId: string) => {
+      return async (dispatch: Dispatch<UserActions>) => {
+          const data = await GetbyId(userId);
+          const { response } = data;
+          if (response.success) {
+              dispatch({
+                  type: UserActionTypes.GETUSERBYID_SUCCESS, payload: { selectedUser: response.payload }
+              });
+          }
+      }
+  }

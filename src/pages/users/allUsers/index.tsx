@@ -12,7 +12,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import { Link, Navigate } from "react-router-dom";
 import { styled } from "@mui/material/styles";
-import { Grid, TablePagination } from "@mui/material";
+import { Grid, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow } from "@mui/material";
 import Paper from "@mui/material/Paper";
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -21,89 +21,30 @@ const Item = styled(Paper)(({ theme }) => ({
   height: "700px",
 }));
 
-const AllUsers: React.FC<any> = () => {
+interface UserData {
+  id: string,
+  firstName: string,
+  lastName: string,
+  email: string,
+  emailConfirmed: boolean,
+  lockedOut: string,
+  role: string,
+}
+
+const AllUsers = () => {
   const { GetAllUsers } = useActions();
   const { DeleteUser } = useActions();
+  const { EditUser } = useActions();
   const { loading, allUsers } = useTypedSelector((state) => state.UserReducer);
 
   let rows: any[] = allUsers;
   const [isRedirect, setIsRedirect] = useState(false);
 
+
+
   useEffect(() => {
     GetAllUsers();
   }, []);
-
-  const columns: GridColDef[] = [
-    { field: "firstName", headerName: "First Name", width: 180 },
-    { field: "lastName", headerName: "Last Name", width: 170 },
-    { field: "email", headerName: "Email", width: 200 },
-    { field: "phoneNumber", headerName: "Phone", width: 150 },
-    { field: "emailConfirmed", headerName: "Confirmed email", width: 130 },
-    {
-      field: "lockoutEnd",
-      headerName: "Lockout End",
-      width: 250,
-    },
-    { field: "role", headerName: "Role", width: 130 },
-    {
-      field: "id",
-      headerName: "Action",
-      sortable: false,
-      renderCell: (params: any) => {
-        const onClick = (e: any) => {
-          e.stopPropagation(); // don't select this row after clicking
-
-          const api: GridApi = params.api;
-          const thisRow: Record<string, GridEditCellValueParams> = {};
-
-          api
-            .getAllColumns()
-            .filter((c: any) => c.field !== "__check__" && !!c)
-            .forEach(
-              (c: any) =>
-                (thisRow[c.field] = params.getValue(params.id, c.field))
-            );
-          const userData = thisRow;
-          setIsRedirect(true);
-        };
-
-        return <Button onClick={onClick}>Edit</Button>;
-      },
-    },
-    {
-      field: "id",
-      headerName: "Action",
-      sortable: false,
-      renderCell: (params: any) => {
-        const onClick = (e: any) => {
-          e.stopPropagation(); // don't select this row after clicking
-    
-          const api: GridApi = params.api;
-    
-          // Assuming you have a function to handle the deletion, replace 'handleDelete' with your actual deletion logic
-          const handleDelete = () => {
-            const thisRow: Record<string, GridEditCellValueParams> = {};
-    
-            api
-              .getAllColumns()
-              .filter((c: any) => c.field !== "__check__" && !!c)
-              .forEach(
-                (c: any) =>
-                  (thisRow[c.field] = params.getValue(params.id, c.field))
-              );
-    
-            const userId = params.getValue(params.Id, "Id");
-    
-            // Call your delete function with the userData
-            // replace 'deleteFunction' with your actual delete function
-            DeleteUser(userId);
-          };
-    
-          return <Button onClick={handleDelete}>Delete</Button>;
-        },
-      }
-    }
-  ];
 
   if (loading) {
     return <Loader />;
@@ -114,36 +55,36 @@ const AllUsers: React.FC<any> = () => {
   }
 
   return (
-    <Box sx={{ display: "flex", width: "100%" }}>
-      <Grid container spacing={2}>
-        <Grid item xs={12} sx={{ mb: 2, textAlign: "right" }}>
-          <Button variant="contained">
-            <Link
-              style={{ textDecoration: "none", color: "#fff" }}
-              to="/dashboard/Register"
-            >
-              Add new user
-            </Link>
-          </Button>
-        </Grid>
-        <Grid item xs={12}>
-          <Item>
-            <DataGrid
-              initialState={{
-                sorting: {
-                  sortModel: [{ field: "lastName", sort: "asc" }],
-                },
-              }}
-              rows={rows}
-              columns={columns}
-              checkboxSelection
-              hideFooterPagination={true}
-              hideFooter={true}
-            />
-          </Item>
-        </Grid>
-      </Grid>
-    </Box>
+    <TableContainer component={Paper}>
+      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <TableHead>
+          <TableRow>
+            <TableCell align="center">FirstName</TableCell>
+            <TableCell align="center">LastName</TableCell>
+            <TableCell align="center">Email</TableCell>
+            <TableCell align="center">EmailConfirmed</TableCell>
+            <TableCell align="center">LockedOut</TableCell>
+            <TableCell align="center">Role</TableCell>
+            <TableCell align="center">Delete</TableCell>
+            <TableCell align="center">Edit</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {allUsers.map((user: UserData) => (
+            <TableRow key={user.id}>
+              <TableCell align="center">{user.firstName}</TableCell>
+              <TableCell align="center">{user.lastName}</TableCell>
+              <TableCell align="center">{user.email}</TableCell>
+              <TableCell align="center">{user.emailConfirmed ? 'true' : 'false'}</TableCell>
+              <TableCell align="center">{user.lockedOut ? user.lockedOut : '-'}</TableCell>
+              <TableCell align="center">{user.role}</TableCell>
+              <TableCell align="center"><Button onClick={() => DeleteUser(user.id)}>Delete</Button></TableCell>
+              <TableCell align="center"><Button onClick={() => EditUser(user)}>Edit</Button></TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 };
 

@@ -17,7 +17,7 @@ export const adminMenu = (
       <ListItemIcon>
         <DashboardIcon />
       </ListItemIcon>
-      <Link to="">
+      <Link style={{ textDecoration: "none", color: "#8a8a8a" }} to="">
         <ListItemText primary="Dashboard" />
       </Link>
     </ListItemButton>
@@ -25,8 +25,16 @@ export const adminMenu = (
       <ListItemIcon>
         <PeopleIcon />
       </ListItemIcon>
-      <Link to="users">
-        <ListItemText primary="Users" />
+      <Link style={{ textDecoration: "none", color: "#8a8a8a" }} to="users">
+        <ListItemText primary="All Users" />
+      </Link>
+    </ListItemButton>
+    <ListItemButton>
+      <ListItemIcon>
+        <PeopleIcon />
+      </ListItemIcon>
+      <Link style={{ textDecoration: "none", color: "#8a8a8a" }} to="register">
+        <ListItemText primary="New User" />
       </Link>
     </ListItemButton>
   </React.Fragment>

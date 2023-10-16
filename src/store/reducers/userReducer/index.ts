@@ -31,6 +31,10 @@ const initialState: UserState = {
         return { ...state, loading: false };
       case UserActionTypes.REGISTER_USER_SUCCESS:
         return { ...state, loading: false, message: action.payload.message };
+      case UserActionTypes.EDITUSER_SUCCESS:
+          return {...state, message: action.payload.message}
+      case UserActionTypes.GETUSERBYID_SUCCESS:
+          return {...state, selectedUser: action.payload.selectedUser}
       case UserActionTypes.LOGOUT_USER:
         return {
           user: {},

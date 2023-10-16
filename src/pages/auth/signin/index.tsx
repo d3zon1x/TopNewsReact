@@ -14,11 +14,12 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useFormik, Formik, Form, Field } from 'formik';
 import { LoginSchema } from '../validation';
-import { login } from '../../../services/api-user-service';
 import { useActions } from "../../../hooks/useActions";
 import { useTypedSelector } from "../../../hooks/useTypedSelector";
 import { store } from '../../../store';
 import Loader from '../../../components/loader';
+import { useState } from 'react'
+
 
 const initialValues = { email: "", password: "", rememberMe: false };
 
@@ -44,10 +45,10 @@ export default function SignIn() {
   const { loading } = useTypedSelector((store) => store.UserReducer);
 
   if (isAuth) {
-    return <Navigate to="/dashboard" />;
+    return <Navigate to="/dashboard"/>;
   }
   if(loading){
-    return  <Loader />
+    return  <Loader/>
   }
   
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
